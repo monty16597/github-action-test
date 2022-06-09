@@ -20,6 +20,12 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           name: id_rsa # optional
           known_hosts: unnecessary
+          config: |
+            Host *
+              StrictHostKeyChecking no
+              UserKnownHostsFile /dev/null
+              ServerAliveInterval 60
+              ServerAliveCountMax 30
           if_key_exists: fail 
 
       - name: shell
