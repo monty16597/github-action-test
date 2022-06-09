@@ -19,6 +19,8 @@ jobs:
       - name: Checkout Codebase
         uses: actions/checkout@v3
 
+      - run:  env
+
       - name: 'Terragrunt Init'
         id: init
         run: |
