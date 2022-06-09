@@ -16,8 +16,9 @@ jobs:
 
       - name: SSH Key Initialization
         run: |
-          eval `ssh-agent -s`
-          ssh-add - <<< '${{ secrets.SSH_KEY }}'
+          # eval `ssh-agent -s`
+          # ssh-add - <<< '${{ secrets.SSH_KEY }}'
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
 
       - name: shell
         run: |
