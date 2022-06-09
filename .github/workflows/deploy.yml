@@ -1,0 +1,25 @@
+name: Terraform
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs: 
+  plan:
+    name: Terragrunt Validate, Plan, Approval, Apply
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Checkout Codebase
+        uses: actions/checkout@v3
+
+      - name: 'Terragrunt Init'
+        id: init
+        run: |
+          terraform init
