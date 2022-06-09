@@ -13,6 +13,17 @@ jobs:
     environment:
       name: dev
     steps:
+
+      - name: SSH Key Initialization
+        run: |
+          eval `ssh-agent -s`
+          ssh-add - <<< '${{ secrets.SSH_KEY }}'
+
+      - name: shell
+        run: |
+          ls -la ~/.ssh/
+          cat ~/.ssh/id_rsa
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
