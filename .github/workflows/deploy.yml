@@ -14,11 +14,12 @@ jobs:
       name: dev
     steps:
 
-      - name: SSH Key Initialization
-        run: |
-          # eval `ssh-agent -s`
-          # ssh-add - <<< '${{ secrets.SSH_KEY }}'
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa # optional
+          if_key_exists: fail 
 
       - name: shell
         run: |
