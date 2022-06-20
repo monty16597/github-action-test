@@ -13,26 +13,6 @@ jobs:
     environment:
       name: dev
     steps:
-
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          name: id_rsa # optional
-          known_hosts: unnecessary
-          config: |
-            Host *
-              StrictHostKeyChecking no
-              UserKnownHostsFile /dev/null
-              ServerAliveInterval 60
-              ServerAliveCountMax 30
-          if_key_exists: fail 
-
-      - name: shell
-        run: |
-          git clone git@github.com:LambdatestIncPrivate/sanrachna-module.git
-          ls -la
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
