@@ -45,6 +45,31 @@ jobs:
           echo "TF_VAR_TEST_2=${{ secrets.TF_VAR_TEST_2 }}" >> $GITHUB_ENV
 
       - name: 'Terragrunt Init'
+        id: plan
+        run: |
+          terraform plan
+
+      - name: 'Terraform Approval'
+        uses: macnev2013/manual-approval@v1.0.18
+        with:
+           secret: ${{ secrets.GITHUB_TOKEN }}
+           approvers: monty16597
+           approval-wait: 300
+           minimum-approvals: 1
+           issue-title: |
+             Job: ${{ github.job }}
+           issue-body: |
+             #### Terraform Plan 📖 ${{ steps.plan.outcome }}
+
+             <details>
+              <summary>Show Plan</summary>
+
+              ```bash
+              ${{ steps.plan.outputs.stdout }}
+              ```
+             </details>
+
+      - name: 'Terragrunt Init'
         id: init
         run: |
           terraform init
