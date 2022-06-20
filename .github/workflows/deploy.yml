@@ -49,7 +49,7 @@ jobs:
              <details>
               <summary>Show Plan</summary>
 
-              ```bash
+              ```terraform
               ${{ steps.plan.outputs.stdout }}
               ```
              </details>
