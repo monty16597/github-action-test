@@ -23,8 +23,13 @@ jobs:
         run: |
           echo "TF_VAR_TEST_1=${{ secrets.TF_VAR_TEST_1 }}" >> $GITHUB_ENV
           echo "TF_VAR_TEST_2=${{ secrets.TF_VAR_TEST_2 }}" >> $GITHUB_ENV
+    
+      - name: 'Terragrunt init'
+        id: init
+        run: |
+          terraform init
 
-      - name: 'Terragrunt Init'
+      - name: 'Terragrunt plan'
         id: plan
         run: |
           terraform plan
@@ -49,8 +54,8 @@ jobs:
               ```
              </details>
 
-      - name: 'Terragrunt Init'
-        id: init
+      - name: 'Terragrunt apply'
+        id: apply
         run: |
           terraform init
           terraform apply -auto-approve
