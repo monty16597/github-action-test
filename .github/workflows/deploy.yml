@@ -1,4 +1,4 @@
-name: Deploy Infrastructure
+name: Terraform
 
 on:
   workflow_dispatch:
@@ -30,12 +30,12 @@ on:
         - backend-internals
         - security-team
 
+jobs: 
   plan:
-    name: Terragrunt Validate, Plan, Approval, Apply on env ${{ github.event.inputs.product }}
+    name: Terragrunt Validate, Plan, Approval, Apply
     runs-on: ubuntu-latest
     environment:
-      name: ${{ github.event.inputs.environment }}
-
+      name: dev
     steps:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
