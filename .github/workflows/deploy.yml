@@ -29,10 +29,9 @@ on:
         - tunnel
         - backend-internals
         - security-team
-env:
-jobs: 
+
   plan:
-    name: Terragrunt Validate, Plan, Approval, Apply on env ${{ github.event.inputs.environment }}
+    name: Terragrunt Validate, Plan, Approval, Apply on env ${{ github.event.inputs.product }}
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment }}
