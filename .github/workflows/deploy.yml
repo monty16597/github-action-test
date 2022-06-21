@@ -32,7 +32,7 @@ on:
 
 jobs: 
   plan:
-    name: Plan on ${{ github.event.input.product }}
+    name: Plan on ${{ github.event.inputs.product }}
     runs-on: ubuntu-latest
     environment:
       name: dev
