@@ -32,7 +32,7 @@ on:
 
 jobs: 
   plan:
-    name: Terragrunt Validate, Plan, Approval, Apply
+    name: Plan on ${{ github.event.input.product }}
     runs-on: ubuntu-latest
     environment:
       name: dev
