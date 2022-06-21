@@ -1,17 +1,42 @@
-name: Terraform
+name: Deploy Infrastructure
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to Perform'
+        required: true
+        type: choice
+        options:
+        - refresh
+        - plan
+        - apply
+        - destroy
+      product:
+        description: 'Product Name to Deploy'
+        required: true
+        type: choice
+        options:
+        - common
+        - auth
+        - falcon
+        - magicleap
+        - hyperexecute
+        - mobile
+        - analytics
+        - integrations
+        - issue-tracker
+        - tunnel
+        - backend-internals
+        - security-team
+env:
 jobs: 
   plan:
-    name: Terragrunt Validate, Plan, Approval, Apply
+    name: Terragrunt Validate, Plan, Approval, Apply on env ${{ github.event.inputs.environment }}
     runs-on: ubuntu-latest
     environment:
-      name: dev
+      name: ${{ github.event.inputs.environment }}
+
     steps:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
