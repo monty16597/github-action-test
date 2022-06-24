@@ -1,34 +1,10 @@
 name: Terraform
 
 on:
-  workflow_dispatch:
-    inputs:
-      action:
-        description: 'Action to Perform'
-        required: true
-        type: choice
-        options:
-        - refresh
-        - plan
-        - apply
-        - destroy
-      product:
-        description: 'Product Name to Deploy'
-        required: true
-        type: choice
-        options:
-        - common
-        - auth
-        - falcon
-        - magicleap
-        - hyperexecute
-        - mobile
-        - analytics
-        - integrations
-        - issue-tracker
-        - tunnel
-        - backend-internals
-        - security-team
+  push:
+    branches:
+      - main
+
 
 jobs: 
   plan:
