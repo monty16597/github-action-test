@@ -1,9 +1,43 @@
-variable "TEST_1" {}
-variable "TEST_2" {}
-
-output "name1" {
-    value = var.TEST_1
-}
-output "name2" {
-    value = var.TEST_2
-}
+variable "US_EAST_1_ML_DB_USERNAME" {}
+variable "US_EAST_1_ML_DB_PASSWORD" {}
+variable "US_EAST_1_ANALYTICS_DB_USERNAME" {}
+variable "US_EAST_1_ANALYTICS_DB_PASSWORD" {}
+variable "APPIUM_VIDEO_API_USERNAME" {}
+variable "APPIUM_VIDEO_API_PASSWORD" {}
+variable "REAL_DEVICE_VIDEO_API_USERNAME" {}
+variable "REAL_DEVICE_VIDEO_API_PASSWORD" {}
+variable "GEO_EDGE_USERNAME" {}
+variable "GEO_EDGE_PASSWORD" {}
+variable "FLUIDSTACK_APP_ID" {}
+variable "FLUIDSTACK_SECRET" {}
+variable "NEWRELIC_LICENSE_KEY" {}
+variable "US_EAST_1_MLTMA_LVMS_DB_NAME" {}
+variable "US_EAST_1_MLTMA_LTMS_DB_NAME" {}
+variable "US_EAST_1_MLTMA_LVMS_RDB_NAME" {}
+variable "US_EAST_1_MLTMA_LTMS_RDB_NAME" {}
+variable "US_EAST_1_MLTLS_DB_NAME" {}
+variable "US_EAST_1_MLTLS_CF_ACCESS_KEY" {}
+variable "US_EAST_1_MLTLS_CF_SECRET_KEY" {}
+variable "US_EAST_1_MLRMAA_AUTH_USERNAME" {}
+variable "US_EAST_1_MLRMAA_AUTH_TOKEN" {}
+variable "US_EAST_1_MLMTS_DB_NAME" {}
+variable "US_EAST_1_MLMMS_DB_NAME" {}
+variable "US_EAST_1_MLMDS_DB_NAME" {}
+variable "US_EAST_1_MLMDS_AUTH_USERNAME" {}
+variable "US_EAST_1_MLMDS_AUTH_TOKEN" {}
+variable "US_EAST_1_MLMCC_DB_NAME" {}
+variable "US_EAST_1_MHOSTAPI_DB_NAME" {}
+variable "US_EAST_1_MHOSTAPI_JWT_TOKEN" {}
+variable "US_EAST_1_MHOSTAPI_VAULT_USERNAME" {}
+variable "US_EAST_1_MHOSTAPI_VAULT_PASSWORD" {}
+variable "US_EAST_1_MLTMS_DB_NAME" {}
+variable "US_EAST_1_MHOSTAPI_DB_USERNAME" {}
+variable "US_EAST_1_MHOSTAPI_DB_PASSWORD" {}
+variable "US_EAST_1_MLTMA_LVMS_RDB_USERNAME" {}
+variable "US_EAST_1_MLTMA_LVMS_RDB_PASSWORD" {}
+variable "US_EAST_1_MLTMA_LTMS_RDB_USERNAME" {}
+variable "US_EAST_1_MLTMA_LTMS_RDB_PASSWORD" {}
+variable "US_EAST_1_MLTMA_LTMS_DB_PASSWORD" {}
+variable "US_EAST_1_MLTMA_LTMS_DB_USERNAME" {}
+variable "US_EAST_1_MLTMA_LVMS_DB_PASSWORD" {}
+variable "US_EAST_1_MLTMA_LVMS_DB_USERNAME" {}
