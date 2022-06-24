@@ -35,51 +35,53 @@ jobs:
     name: Plan on ${{ github.event.inputs.product }}
     runs-on: ubuntu-latest
     environment:
-      name: dev
+      name: prod_mobile
     steps:
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-
       - name: Checkout Codebase
         uses: actions/checkout@v3
 
       - name: set environment
         run: |
-          echo "TF_VAR_TEST_1=${{ secrets.TF_VAR_TEST_1 }}" >> $GITHUB_ENV
-          echo "TF_VAR_TEST_2=${{ secrets.TF_VAR_TEST_2 }}" >> $GITHUB_ENV
-    
-      - name: 'Terragrunt init'
-        id: init
-        run: |
-          terraform init
-
-      - name: 'Terragrunt plan'
-        id: plan
-        run: |
-          terraform plan -no-color
-
-      - name: 'Terraform Approval'
-        uses: macnev2013/manual-approval@v1.0.18
-        with:
-           secret: ${{ secrets.GITHUB_TOKEN }}
-           approvers: monty16597
-           approval-wait: 300
-           minimum-approvals: 1
-           issue-title: |
-             Job: ${{ github.job }}
-          #  issue-body: |
-          #    #### Terraform Plan 📖 ${{ steps.plan.outcome }}
-
-          #    <details>
-          #     <summary>Show Plan</summary>
-
-          #     ```terraform
-          #     ${{ steps.plan.outputs.stdout }}
-          #     ```
-          #    </details>
-
-      - name: 'Terragrunt apply'
-        id: apply
-        run: |
-          terraform init
-          terraform apply -auto-approve
+          echo "TF_VAR_US_EAST_1_ML_DB_USERNAME='${{ secrets.US_EAST_1_ML_DB_USERNAME }}'"
+          echo "TF_VAR_US_EAST_1_ML_DB_PASSWORD='${{ secrets.US_EAST_1_ML_DB_PASSWORD }}'"
+          echo "TF_VAR_US_EAST_1_ANALYTICS_DB_USERNAME='${{ secrets.US_EAST_1_ANALYTICS_DB_USERNAME }}'"
+          echo "TF_VAR_US_EAST_1_ANALYTICS_DB_PASSWORD='${{ secrets.US_EAST_1_ANALYTICS_DB_PASSWORD }}'"
+          echo "TF_VAR_APPIUM_VIDEO_API_USERNAME='${{ secrets.APPIUM_VIDEO_API_USERNAME }}'"
+          echo "TF_VAR_APPIUM_VIDEO_API_PASSWORD='${{ secrets.APPIUM_VIDEO_API_PASSWORD }}'"
+          echo "TF_VAR_REAL_DEVICE_VIDEO_API_USERNAME='${{ secrets.REAL_DEVICE_VIDEO_API_USERNAME }}'"
+          echo "TF_VAR_REAL_DEVICE_VIDEO_API_PASSWORD='${{ secrets.REAL_DEVICE_VIDEO_API_PASSWORD }}'"
+          echo "TF_VAR_GEO_EDGE_USERNAME='${{ secrets.GEO_EDGE_USERNAME }}'"
+          echo "TF_VAR_GEO_EDGE_PASSWORD='${{ secrets.GEO_EDGE_PASSWORD }}'"
+          echo "TF_VAR_FLUIDSTACK_APP_ID='${{ secrets.FLUIDSTACK_APP_ID }}'"
+          echo "TF_VAR_FLUIDSTACK_SECRET='${{ secrets.FLUIDSTACK_SECRET }}'"
+          echo "TF_VAR_NEWRELIC_LICENSE_KEY='${{ secrets.NEWRELIC_LICENSE_KEY }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_DB_NAME='${{ secrets.US_EAST_1_MLTMA_LVMS_DB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_DB_NAME='${{ secrets.US_EAST_1_MLTMA_LTMS_DB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_NAME='${{ secrets.US_EAST_1_MLTMA_LVMS_RDB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_NAME='${{ secrets.US_EAST_1_MLTMA_LTMS_RDB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MLTLS_DB_NAME='${{ secrets.US_EAST_1_MLTLS_DB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MLTLS_CF_ACCESS_KEY='${{ secrets.US_EAST_1_MLTLS_CF_ACCESS_KEY }}'"
+          echo "TF_VAR_US_EAST_1_MLTLS_CF_SECRET_KEY='${{ secrets.US_EAST_1_MLTLS_CF_SECRET_KEY }}'"
+          echo "TF_VAR_US_EAST_1_MLRMAA_AUTH_USERNAME='${{ secrets.US_EAST_1_MLRMAA_AUTH_USERNAME }}'"
+          echo "TF_VAR_US_EAST_1_MLRMAA_AUTH_TOKEN='${{ secrets.US_EAST_1_MLRMAA_AUTH_TOKEN }}'"
+          echo "TF_VAR_US_EAST_1_MLMTS_DB_NAME='${{ secrets.US_EAST_1_MLMTS_DB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MLMMS_DB_NAME='${{ secrets.US_EAST_1_MLMMS_DB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MLMDS_DB_NAME='${{ secrets.US_EAST_1_MLMDS_DB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MLMDS_AUTH_USERNAME='${{ secrets.US_EAST_1_MLMDS_AUTH_USERNAME }}'"
+          echo "TF_VAR_US_EAST_1_MLMDS_AUTH_TOKEN='${{ secrets.US_EAST_1_MLMDS_AUTH_TOKEN }}'"
+          echo "TF_VAR_US_EAST_1_MLMCC_DB_NAME='${{ secrets.US_EAST_1_MLMCC_DB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_DB_NAME='${{ secrets.US_EAST_1_MHOSTAPI_DB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_JWT_TOKEN='${{ secrets.US_EAST_1_MHOSTAPI_JWT_TOKEN }}'"
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_VAULT_USERNAME='${{ secrets.US_EAST_1_MHOSTAPI_VAULT_USERNAME }}'"
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_VAULT_PASSWORD='${{ secrets.US_EAST_1_MHOSTAPI_VAULT_PASSWORD }}'"
+          echo "TF_VAR_US_EAST_1_MLTMS_DB_NAME='${{ secrets.US_EAST_1_MLTMS_DB_NAME }}'"
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_DB_USERNAME='${{ secrets.US_EAST_1_MHOSTAPI_DB_USERNAME }}'"
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_DB_PASSWORD='${{ secrets.US_EAST_1_MHOSTAPI_DB_PASSWORD }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_USERNAME='${{ secrets.US_EAST_1_MLTMA_LVMS_RDB_USERNAME }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_PASSWORD='${{ secrets.US_EAST_1_MLTMA_LVMS_RDB_PASSWORD }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_USERNAME='${{ secrets.US_EAST_1_MLTMA_LTMS_RDB_USERNAME }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_PASSWORD='${{ secrets.US_EAST_1_MLTMA_LTMS_RDB_PASSWORD }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_DB_PASSWORD='${{ secrets.US_EAST_1_MLTMA_LTMS_DB_PASSWORD }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_DB_USERNAME='${{ secrets.US_EAST_1_MLTMA_LTMS_DB_USERNAME }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_DB_PASSWORD='${{ secrets.US_EAST_1_MLTMA_LVMS_DB_PASSWORD }}'"
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_DB_USERNAME='${{ secrets.US_EAST_1_MLTMA_LVMS_DB_USERNAME }}'"
