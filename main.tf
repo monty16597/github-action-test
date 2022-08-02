@@ -36,3 +36,7 @@
 #   }
 # }
 
+
+output "name" {
+  value = "test"
+}
