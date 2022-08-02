@@ -1,5 +1,6 @@
 variable "test_1" {
   type = string
+  default = "value"
 }
 
 variable "test_2" {
