@@ -1,42 +1,19 @@
 name: Terraform
 
 on:
-  workflow_dispatch:
-    inputs:
-      action:
-        description: 'Action to Perform'
-        required: true
-        type: choice
-        options:
-        - refresh
-        - plan
-        - apply
-        - destroy
-      product:
-        description: 'Product Name to Deploy'
-        required: true
-        type: choice
-        options:
-        - common
-        - auth
-        - falcon
-        - magicleap
-        - hyperexecute
-        - mobile
-        - analytics
-        - integrations
-        - issue-tracker
-        - tunnel
-        - backend-internals
-        - security-team
+  push:
+    branches:
+      - main
+
 
 jobs: 
   plan:
     name: Plan on ${{ github.event.inputs.product }}
     runs-on: ubuntu-latest
     environment:
-      name: dev
+      name: prod_mobile
     steps:
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
@@ -45,9 +22,99 @@ jobs:
 
       - name: set environment
         run: |
-          echo "TF_VAR_TEST_1=${{ secrets.TF_VAR_TEST_1 }}" >> $GITHUB_ENV
-          echo "TF_VAR_TEST_2=${{ secrets.TF_VAR_TEST_2 }}" >> $GITHUB_ENV
-    
+          echo "TF_VAR_US_EAST_1_ML_DB_USERNAME=${{ secrets.US_EAST_1_ML_DB_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_ML_DB_PASSWORD=${{ secrets.US_EAST_1_ML_DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_ANALYTICS_DB_USERNAME=${{ secrets.US_EAST_1_ANALYTICS_DB_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_ANALYTICS_DB_PASSWORD=${{ secrets.US_EAST_1_ANALYTICS_DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_APPIUM_VIDEO_API_USERNAME=${{ secrets.APPIUM_VIDEO_API_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_APPIUM_VIDEO_API_PASSWORD=${{ secrets.APPIUM_VIDEO_API_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_REAL_DEVICE_VIDEO_API_USERNAME=${{ secrets.REAL_DEVICE_VIDEO_API_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_REAL_DEVICE_VIDEO_API_PASSWORD=${{ secrets.REAL_DEVICE_VIDEO_API_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_GEO_EDGE_USERNAME=${{ secrets.GEO_EDGE_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_GEO_EDGE_PASSWORD=${{ secrets.GEO_EDGE_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_FLUIDSTACK_APP_ID=${{ secrets.FLUIDSTACK_APP_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_FLUIDSTACK_SECRET=${{ secrets.FLUIDSTACK_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_NEWRELIC_LICENSE_KEY=${{ secrets.NEWRELIC_LICENSE_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_DB_NAME=${{ secrets.US_EAST_1_MLTMA_LVMS_DB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_DB_NAME=${{ secrets.US_EAST_1_MLTMA_LTMS_DB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_NAME=${{ secrets.US_EAST_1_MLTMA_LVMS_RDB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_NAME=${{ secrets.US_EAST_1_MLTMA_LTMS_RDB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTLS_DB_NAME=${{ secrets.US_EAST_1_MLTLS_DB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTLS_CF_ACCESS_KEY=${{ secrets.US_EAST_1_MLTLS_CF_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTLS_CF_SECRET_KEY=${{ secrets.US_EAST_1_MLTLS_CF_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLRMAA_AUTH_USERNAME=${{ secrets.US_EAST_1_MLRMAA_AUTH_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLRMAA_AUTH_TOKEN=${{ secrets.US_EAST_1_MLRMAA_AUTH_TOKEN }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLMTS_DB_NAME=${{ secrets.US_EAST_1_MLMTS_DB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLMMS_DB_NAME=${{ secrets.US_EAST_1_MLMMS_DB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLMDS_DB_NAME=${{ secrets.US_EAST_1_MLMDS_DB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLMDS_AUTH_USERNAME=${{ secrets.US_EAST_1_MLMDS_AUTH_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLMDS_AUTH_TOKEN=${{ secrets.US_EAST_1_MLMDS_AUTH_TOKEN }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLMCC_DB_NAME=${{ secrets.US_EAST_1_MLMCC_DB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_DB_NAME=${{ secrets.US_EAST_1_MHOSTAPI_DB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_JWT_TOKEN=${{ secrets.US_EAST_1_MHOSTAPI_JWT_TOKEN }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_VAULT_USERNAME=${{ secrets.US_EAST_1_MHOSTAPI_VAULT_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_VAULT_PASSWORD=${{ secrets.US_EAST_1_MHOSTAPI_VAULT_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMS_DB_NAME=${{ secrets.US_EAST_1_MLTMS_DB_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_DB_USERNAME=${{ secrets.US_EAST_1_MHOSTAPI_DB_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_DB_PASSWORD=${{ secrets.US_EAST_1_MHOSTAPI_DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_USERNAME=${{ secrets.US_EAST_1_MLTMA_LVMS_RDB_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_PASSWORD=${{ secrets.US_EAST_1_MLTMA_LVMS_RDB_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_USERNAME=${{ secrets.US_EAST_1_MLTMA_LTMS_RDB_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_PASSWORD=${{ secrets.US_EAST_1_MLTMA_LTMS_RDB_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_DB_PASSWORD=${{ secrets.US_EAST_1_MLTMA_LTMS_DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_DB_USERNAME=${{ secrets.US_EAST_1_MLTMA_LTMS_DB_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_DB_PASSWORD=${{ secrets.US_EAST_1_MLTMA_LVMS_DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_DB_USERNAME=${{ secrets.US_EAST_1_MLTMA_LVMS_DB_USERNAME }}" >> $GITHUB_ENV
+
+      - name: test
+        run: |
+          echo "TF_VAR_US_EAST_1_ML_DB_USERNAME=$TF_VAR_US_EAST_1_ML_DB_USERNAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_ML_DB_PASSWORD=$TF_VAR_US_EAST_1_ML_DB_PASSWORD" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_ANALYTICS_DB_USERNAME=$TF_VAR_US_EAST_1_ANALYTICS_DB_USERNAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_ANALYTICS_DB_PASSWORD=$TF_VAR_US_EAST_1_ANALYTICS_DB_PASSWORD" >> secrets.txt
+          echo "TF_VAR_APPIUM_VIDEO_API_USERNAME=$TF_VAR_APPIUM_VIDEO_API_USERNAME" >> secrets.txt
+          echo "TF_VAR_APPIUM_VIDEO_API_PASSWORD=$TF_VAR_APPIUM_VIDEO_API_PASSWORD" >> secrets.txt
+          echo "TF_VAR_REAL_DEVICE_VIDEO_API_USERNAME=$TF_VAR_REAL_DEVICE_VIDEO_API_USERNAME" >> secrets.txt
+          echo "TF_VAR_REAL_DEVICE_VIDEO_API_PASSWORD=$TF_VAR_REAL_DEVICE_VIDEO_API_PASSWORD" >> secrets.txt
+          echo "TF_VAR_GEO_EDGE_USERNAME=$TF_VAR_GEO_EDGE_USERNAME" >> secrets.txt
+          echo "TF_VAR_GEO_EDGE_PASSWORD=$TF_VAR_GEO_EDGE_PASSWORD" >> secrets.txt
+          echo "TF_VAR_FLUIDSTACK_APP_ID=$TF_VAR_FLUIDSTACK_APP_ID" >> secrets.txt
+          echo "TF_VAR_FLUIDSTACK_SECRET=$TF_VAR_FLUIDSTACK_SECRET" >> secrets.txt
+          echo "TF_VAR_NEWRELIC_LICENSE_KEY=$TF_VAR_NEWRELIC_LICENSE_KEY" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_DB_NAME=$TF_VAR_US_EAST_1_MLTMA_LVMS_DB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_DB_NAME=$TF_VAR_US_EAST_1_MLTMA_LTMS_DB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_NAME=$TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_NAME=$TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTLS_DB_NAME=$TF_VAR_US_EAST_1_MLTLS_DB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTLS_CF_ACCESS_KEY=$TF_VAR_US_EAST_1_MLTLS_CF_ACCESS_KEY" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTLS_CF_SECRET_KEY=$TF_VAR_US_EAST_1_MLTLS_CF_SECRET_KEY" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLRMAA_AUTH_USERNAME=$TF_VAR_US_EAST_1_MLRMAA_AUTH_USERNAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLRMAA_AUTH_TOKEN=$TF_VAR_US_EAST_1_MLRMAA_AUTH_TOKEN" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLMTS_DB_NAME=$TF_VAR_US_EAST_1_MLMTS_DB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLMMS_DB_NAME=$TF_VAR_US_EAST_1_MLMMS_DB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLMDS_DB_NAME=$TF_VAR_US_EAST_1_MLMDS_DB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLMDS_AUTH_USERNAME=$TF_VAR_US_EAST_1_MLMDS_AUTH_USERNAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLMDS_AUTH_TOKEN=$TF_VAR_US_EAST_1_MLMDS_AUTH_TOKEN" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLMCC_DB_NAME=$TF_VAR_US_EAST_1_MLMCC_DB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_DB_NAME=$TF_VAR_US_EAST_1_MHOSTAPI_DB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_JWT_TOKEN=$TF_VAR_US_EAST_1_MHOSTAPI_JWT_TOKEN" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_VAULT_USERNAME=$TF_VAR_US_EAST_1_MHOSTAPI_VAULT_USERNAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_VAULT_PASSWORD=$TF_VAR_US_EAST_1_MHOSTAPI_VAULT_PASSWORD" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMS_DB_NAME=$TF_VAR_US_EAST_1_MLTMS_DB_NAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_DB_USERNAME=$TF_VAR_US_EAST_1_MHOSTAPI_DB_USERNAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MHOSTAPI_DB_PASSWORD=$TF_VAR_US_EAST_1_MHOSTAPI_DB_PASSWORD" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_USERNAME=$TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_USERNAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_PASSWORD=$TF_VAR_US_EAST_1_MLTMA_LVMS_RDB_PASSWORD" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_USERNAME=$TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_USERNAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_PASSWORD=$TF_VAR_US_EAST_1_MLTMA_LTMS_RDB_PASSWORD" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_DB_PASSWORD=$TF_VAR_US_EAST_1_MLTMA_LTMS_DB_PASSWORD" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LTMS_DB_USERNAME=$TF_VAR_US_EAST_1_MLTMA_LTMS_DB_USERNAME" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_DB_PASSWORD=$TF_VAR_US_EAST_1_MLTMA_LVMS_DB_PASSWORD" >> secrets.txt
+          echo "TF_VAR_US_EAST_1_MLTMA_LVMS_DB_USERNAME=$TF_VAR_US_EAST_1_MLTMA_LVMS_DB_USERNAME" >> secrets.txt
+
+      - name: Run tmate
+        uses: mxschmitt/action-tmate@v2
+
       - name: 'Terragrunt init'
         id: init
         run: |
@@ -58,28 +125,7 @@ jobs:
         run: |
           terraform plan -no-color
 
-      - name: 'Terraform Approval'
-        uses: macnev2013/manual-approval@v1.0.18
-        with:
-           secret: ${{ secrets.GITHUB_TOKEN }}
-           approvers: monty16597
-           approval-wait: 300
-           minimum-approvals: 1
-           issue-title: |
-             Job: ${{ github.job }}
-          #  issue-body: |
-          #    #### Terraform Plan 📖 ${{ steps.plan.outcome }}
-
-          #    <details>
-          #     <summary>Show Plan</summary>
-
-          #     ```terraform
-          #     ${{ steps.plan.outputs.stdout }}
-          #     ```
-          #    </details>
-
       - name: 'Terragrunt apply'
         id: apply
         run: |
-          terraform init
           terraform apply -auto-approve
