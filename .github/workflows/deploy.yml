@@ -23,16 +23,16 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_version: 0.15.0
 
-      - uses: actions/cache@v2
-        name: Cache plugin dir
-        with:
-          path: ~/.tflint.d/plugins
-          key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+      # - uses: actions/cache@v2
+      #   name: Cache plugin dir
+      #   with:
+      #     path: ~/.tflint.d/plugins
+      #     key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
 
-      - uses: terraform-linters/setup-tflint@v2
-        name: Setup TFLint
-        with:
-          tflint_version: v0.38.1
+      # - uses: terraform-linters/setup-tflint@v2
+      #   name: Setup TFLint
+      #   with:
+      #     tflint_version: v0.38.1
 
       - name: Terraform Format
         id: fmt
@@ -71,19 +71,19 @@ jobs:
           commenter_input: ${{ format('{0}{1}', steps.validate.outputs.stdout, steps.validate.outputs.stderr) }}
           commenter_exitcode: ${{ steps.validate.outputs.exitcode }}
 
-      - name: Init TFLint
-        run: tflint --init
+      # - name: Init TFLint
+      #   run: tflint --init
 
-      - name: Run TFLint
-        id: tflint
-        run: tflint -f compact
+      # - name: Run TFLint
+      #   id: tflint
+      #   run: tflint -f compact
 
-      - name: Post TFLint
-        uses: robburger/terraform-pr-commenter@v1
-        with:
-          commenter_type: tflint
-          commenter_input: ${{ format('{0}{1}', steps.tflint.outputs.stdout, steps.tflint.outputs.stderr) }}
-          commenter_exitcode: ${{ steps.tflint.outputs.exitcode }}
+      # - name: Post TFLint
+      #   uses: robburger/terraform-pr-commenter@v1
+      #   with:
+      #     commenter_type: tflint
+      #     commenter_input: ${{ format('{0}{1}', steps.tflint.outputs.stdout, steps.tflint.outputs.stderr) }}
+      #     commenter_exitcode: ${{ steps.tflint.outputs.exitcode }}
 
       - name: Terraform Plan
         id: plan
