@@ -7,6 +7,18 @@ on:
       - master
 
 jobs:
+  Checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: cleartax/jira-lint@master
+        name: jira-lint
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          jira-token: ${{ secrets.JIRA_TOKEN }}
+          jira-base-url: https://lambdatest.atlassian.net
+          validate_issue_status: true
+          allowed_issue_statuses: 'Under Review'
+
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
@@ -85,14 +97,14 @@ jobs:
       #     commenter_input: ${{ format('{0}{1}', steps.tflint.outputs.stdout, steps.tflint.outputs.stderr) }}
       #     commenter_exitcode: ${{ steps.tflint.outputs.exitcode }}
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -out workspace.plan -input=false
+      # - name: Terraform Plan
+      #   id: plan
+      #   run: terraform plan -out workspace.plan -input=false
 
-      - name: Post Plan
-        if: always() && github.ref != 'refs/heads/master' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure')
-        uses: robburger/terraform-pr-commenter@v1
-        with:
-          commenter_type: plan
-          commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
-          commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
+      # - name: Post Plan
+      #   if: always() && github.ref != 'refs/heads/master' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure')
+      #   uses: robburger/terraform-pr-commenter@v1
+      #   with:
+      #     commenter_type: plan
+      #     commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
+      #     commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
