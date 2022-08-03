@@ -10,7 +10,7 @@ jobs:
   Checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: cleartax/jira-lint@v0.1.0
+      - uses: cleartax/jira-lint@master
         name: jira-lint
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
