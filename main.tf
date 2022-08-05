@@ -38,5 +38,5 @@
 
 
 output "name" {
-  value = "test"
+  value = var.TEST
 }

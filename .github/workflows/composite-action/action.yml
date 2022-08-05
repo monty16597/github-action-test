@@ -1,0 +1,10 @@
+name: "Import github env secrets"
+description: "Checks out the repository and does something"
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/checkout@v2
+
+  - name: Select environment variables
+    run: |
+      echo 'TF_VAR_TEST=${{ secrets.TEST }}' >> $GITHUB_ENV
