@@ -67,7 +67,7 @@ jobs:
           pwd
           ls -la
 
-      - uses: ./.github/workflows/composite-action
+      - uses: .github/workflows/composite-action
 
       - name: Terraform Plan
         id: plan
