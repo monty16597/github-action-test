@@ -67,7 +67,10 @@ jobs:
           pwd
           ls -la
 
-      - uses: .github/workflows/composite-action
+      - uses: ./.github/workflows/composite-action
+        with:
+          product: 'realdevice'
+          env: 'dev'
 
       - name: Terraform Plan
         id: plan
