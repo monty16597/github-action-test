@@ -106,4 +106,4 @@ jobs:
 
       - name: Terraform apply
         if: always() && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
-        run: terraform apply workspace.plan --auto-approve -input=false
+        run: terraform apply --auto-approve -input=false workspace.plan
