@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+    types: ['edited']
   workflow_dispatch:
     inputs:
       action:
@@ -43,14 +44,10 @@ jobs:
       name: dev
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      TF_IN_AUTOMATION: true
+      TF_IN_AUTOMATION: true\
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Get PR labels
-        id: pr-labels
-        uses: joerick/pr-labels-action@v1.0.6
 
       - name: test
         run: |
