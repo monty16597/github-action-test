@@ -8,7 +8,7 @@ on:
 
 jobs:
   terraform-pull-request:
-    if: github.event_name == "pull_request"
+    if: github.event_name == 'pull_request'
     name: 'Terraform Pull Request checks'
     runs-on: ubuntu-latest
     environment:
