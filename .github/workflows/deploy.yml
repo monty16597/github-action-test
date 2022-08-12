@@ -134,8 +134,6 @@ jobs:
     needs: detect
     name: Deployment on env ${{ needs.detect.outputs.env_name }}
     runs-on: aws-prod
-    environment:
-      name: ${{ needs.detect.outputs.env_name }}_${{ needs.detect.outputs.product }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       TF_IN_AUTOMATION: true
