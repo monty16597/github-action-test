@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    types: [opened, labeled, unlabeled, synchronize]
   workflow_dispatch:
     inputs:
       action:
@@ -48,6 +47,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Get PR labels
+        id: pr-labels
+        uses: joerick/pr-labels-action@v1.0.6
 
       - name: test
         run: |
