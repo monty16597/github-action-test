@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+    types: [opened, labeled, unlabeled, synchronize]
   workflow_dispatch:
     inputs:
       action:
@@ -53,10 +54,11 @@ jobs:
         uses: joerick/pr-labels-action@v1.0.6
 
       - name: test
+        id: branch_check
         run: |
           echo ${{ steps.pr-labels.outputs.labels }}
           echo "Running on branch ${{ steps.pr-labels.outputs.labels }}"
-          if [ "${{ contains(steps.pr-labels.outputs.labels, 'project-mobile') }}" == "true" ]; then
+          if [[ "${{ contains(steps.pr-labels.outputs.labels, 'project-mobile') }}" == "true" ]]; then
             echo "::set-output name=project::mobile"
           else
             echo "::set-output name=project::None"
