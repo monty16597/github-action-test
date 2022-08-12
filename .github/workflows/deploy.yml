@@ -24,6 +24,9 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_version: 0.15.0
+      
+      - name: "test"
+        run: echo ${{ github.triggering_actor }}
 
       - name: Terraform Format
         id: fmt
@@ -67,11 +70,44 @@ jobs:
           pwd
           ls -la
 
+<<<<<<< HEAD
+      - name: Init TFLint
+        run: tflint --init
+=======
       - uses: ./.github/workflows/composite-action
         with:
           product: 'realdevice'
           env: 'dev'
+>>>>>>> 153504835b77d27e8066e336b9521024ccfcfd07
 
+<<<<<<< HEAD
+      - name: Run TFLint
+        id: tflint
+        run: tflint -f compact
+=======
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -out workspace.plan -input=false
+>>>>>>> 153504835b77d27e8066e336b9521024ccfcfd07
+
+<<<<<<< HEAD
+      - name: Post TFLint
+        uses: robburger/terraform-pr-commenter@v1
+        with:
+          commenter_type: tflint
+          commenter_input: ${{ format('{0}{1}', steps.tflint.outputs.stdout, steps.tflint.outputs.stderr) }}
+          commenter_exitcode: ${{ steps.tflint.outputs.exitcode }}
+=======
+      - name: Post Plan
+        if: always() && github.ref != 'refs/heads/master' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure')
+        uses: robburger/terraform-pr-commenter@v1
+        with:
+          commenter_type: plan
+          commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
+          commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
+>>>>>>> 153504835b77d27e8066e336b9521024ccfcfd07
+
+<<<<<<< HEAD
       - name: Terraform Plan
         id: plan
         run: terraform plan -out workspace.plan -input=false
@@ -83,3 +119,6 @@ jobs:
           commenter_type: plan
           commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
           commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
+
+=======
+>>>>>>> 153504835b77d27e8066e336b9521024ccfcfd07
