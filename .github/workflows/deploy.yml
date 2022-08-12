@@ -55,6 +55,12 @@ jobs:
       - name: test
         run: echo ${{ steps.pr-labels.outputs.labels }}
 
+      - uses: trstringer/require-label-prefix@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          prefix: project
+
+
       # - name: Setup Terraform
       #   uses: hashicorp/setup-terraform@v1
       #   with:
