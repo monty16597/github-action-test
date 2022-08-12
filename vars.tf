@@ -11,3 +11,8 @@ variable "test_2" {
 output "test_1" {
   value = "v1"
 }
+
+variable "TEST" {
+  type = string
+  default = "test"
+}
