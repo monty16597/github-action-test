@@ -53,13 +53,17 @@ jobs:
         uses: joerick/pr-labels-action@v1.0.6
 
       - name: test
-        run: echo ${{ steps.pr-labels.outputs.labels }}
+        run: |
+          echo ${{ steps.pr-labels.outputs.labels }}
+          echo "Running on branch ${{ steps.pr-labels.outputs.labels }}"
+          if [ "${{ contains(steps.pr-labels.outputs.labels, project-mobile) }}" ]; then
+            echo "::set-output name=project::mobile"
+          else
+            echo "::set-output name=project::None"
+          fi
 
-      - uses: trstringer/require-label-prefix@v1
-        with:
-          secret: ${{ github.TOKEN }}
-          prefix: project
-          labelSeparator: ":"
+      - name: test
+        run: echo $project
 
 
       # - name: Setup Terraform
