@@ -56,7 +56,7 @@ jobs:
         run: |
           echo ${{ steps.pr-labels.outputs.labels }}
           echo "Running on branch ${{ steps.pr-labels.outputs.labels }}"
-          if [ "${{ contains(steps.pr-labels.outputs.labels, project-mobile) }}" ]; then
+          if [ "${{ contains(steps.pr-labels.outputs.labels, 'project-mobile') }}" ]; then
             echo "::set-output name=project::mobile"
           else
             echo "::set-output name=project::None"
