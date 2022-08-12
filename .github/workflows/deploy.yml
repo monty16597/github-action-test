@@ -3,6 +3,7 @@ name: 'Terraform'
 on:
   pull_request:
     branches:
+      - main
       - prod
       - stage
       - preprod
