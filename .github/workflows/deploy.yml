@@ -169,7 +169,7 @@ jobs:
 
       - name: Post Format
         if: always() && (steps.fmt.outcome == 'success' || steps.fmt.outcome == 'failure') && github.event_name == 'pull_request'
-        uses: monty16597/terraform-pr-commenter@v1
+        uses: monty16597/terraform-pr-commenter@master
         with:
           commenter_type: fmt
           commenter_input: ${{ format('{0}{1}', steps.fmt.outputs.stdout, steps.fmt.outputs.stderr) }}
