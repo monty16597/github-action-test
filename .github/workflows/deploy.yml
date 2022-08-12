@@ -59,7 +59,7 @@ jobs:
         with:
           secret: ${{ github.TOKEN }}
           prefix: project
-
+          labelSeparator: ":"
 
       # - name: Setup Terraform
       #   uses: hashicorp/setup-terraform@v1
