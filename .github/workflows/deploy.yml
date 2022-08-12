@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main
-    types: [opened, labeled, unlabeled, synchronize]
+    types: [opened, labeled, unlabeled]
   workflow_dispatch:
     inputs:
       action:
@@ -56,6 +56,19 @@ jobs:
       - name: test
         id: branch_check
         run: |
+          echo "Running on branch ${{ github.ref }}"
+          if [ "${{ github.ref }}" = "refs/heads/dev" ]; then
+            echo "::set-output name=env_name::dev"
+          elif [ "${{ github.ref }}" = "refs/heads/preprod" ]; then
+            echo "::set-output name=env_name::preprod"
+          elif [ "${{ github.ref }}" = "refs/heads/stage" ]; then
+            echo "::set-output name=env_name::stage"
+          elif [ "${{ github.ref }}" = "refs/heads/prod" ]; then
+            echo "::set-output name=env_name::prod"
+          else
+            echo "::set-output name=env_name::None"
+          fi
+
           echo ${{ steps.pr-labels.outputs.labels }}
           echo "Running on branch ${{ steps.pr-labels.outputs.labels }}"
           if [[ "${{ contains(steps.pr-labels.outputs.labels, 'project-mobile') }}" == "true" ]]; then
