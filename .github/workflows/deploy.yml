@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
     inputs:
       action:
@@ -61,7 +61,7 @@ jobs:
         continue-on-error: true
 
       - name: Post Format
-        if: always() && github.ref != 'refs/heads/master' && (steps.fmt.outcome == 'success' || steps.fmt.outcome == 'failure') && github.event_name == 'pull_request'
+        if: always() && github.ref != 'refs/heads/main' && (steps.fmt.outcome == 'success' || steps.fmt.outcome == 'failure') && github.event_name == 'pull_request'
         uses: robburger/terraform-pr-commenter@v1
         with:
           commenter_type: fmt
@@ -73,7 +73,7 @@ jobs:
         run: terraform init
 
       - name: Post Init
-        if: always() && github.ref != 'refs/heads/master' && (steps.init.outcome == 'success' || steps.init.outcome == 'failure') && github.event_name == 'pull_request'
+        if: always() && github.ref != 'refs/heads/main' && (steps.init.outcome == 'success' || steps.init.outcome == 'failure') && github.event_name == 'pull_request'
         uses: robburger/terraform-pr-commenter@v1
         with:
           commenter_type: init
@@ -86,7 +86,7 @@ jobs:
         run: terraform validate
 
       - name: Post Validate
-        if: always() && github.ref != 'refs/heads/master' && (steps.validate.outcome == 'success' || steps.validate.outcome == 'failure') && github.event_name == 'pull_request'
+        if: always() && github.ref != 'refs/heads/main' && (steps.validate.outcome == 'success' || steps.validate.outcome == 'failure') && github.event_name == 'pull_request'
         uses: robburger/terraform-pr-commenter@v1
         with:
           commenter_type: validate
@@ -98,7 +98,7 @@ jobs:
         run: terraform plan -out workspace.plan -input=false
 
       - name: Post Plan
-        if: always() && github.ref != 'refs/heads/master' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') && github.event_name == 'pull_request'
+        if: always() && github.ref != 'refs/heads/main' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') && github.event_name == 'pull_request'
         uses: robburger/terraform-pr-commenter@v1
         with:
           commenter_type: plan
@@ -106,5 +106,5 @@ jobs:
           commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
 
       - name: Terraform apply
-        if: always() && github.ref == 'refs/heads/master' && github.event_name == 'workflow_dispatch'
+        if: always() && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
         run: terraform apply workspace.plan --auto-approve -input=false
