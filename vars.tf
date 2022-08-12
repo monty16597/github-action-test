@@ -14,5 +14,5 @@ output "test_1" {
 
 variable "TEST" {
   type = string
-  value = "test"
+  default = "test"
 }
