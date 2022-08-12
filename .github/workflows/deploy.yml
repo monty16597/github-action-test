@@ -56,14 +56,14 @@ jobs:
         run: |
           echo ${{ steps.pr-labels.outputs.labels }}
           echo "Running on branch ${{ steps.pr-labels.outputs.labels }}"
-          if [ ${{ contains(steps.pr-labels.outputs.labels, 'project-mobile') }} ]; then
+          if [ "${{ contains(steps.pr-labels.outputs.labels, 'project-mobile') }}" == "true" ]; then
             echo "::set-output name=project::mobile"
           else
             echo "::set-output name=project::None"
           fi
 
       - name: test
-        run: echo $project
+        run: echo ${{ steps.branch_check.outputs.project }}
 
 
       # - name: Setup Terraform
