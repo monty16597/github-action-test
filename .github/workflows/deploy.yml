@@ -3,7 +3,10 @@ name: 'Terraform'
 on:
   pull_request:
     branches:
-      - main
+      - prod
+      - stage
+      - preprod
+      - dev
     types: [opened, labeled, unlabeled, synchronize]
   workflow_dispatch:
     inputs:
@@ -37,27 +40,73 @@ on:
         - cost-optimisation
 
 jobs:
-  terraform:
-    name: 'Terraform'
-    runs-on: ubuntu-latest
-    environment:
-      name: dev
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      TF_IN_AUTOMATION: true\
+  detect:
+    name: Started for ${{ github.event.inputs.product }}
+    runs-on: aws-prod
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
 
       - name: Get PR labels
+        if: github.event_name == 'pull_request'
         id: pr-labels
         uses: joerick/pr-labels-action@v1.0.6
 
-      - name: test
+      - name: Select env on PR
+        id: branch_check_pr
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Running on branch ${{ github.base_ref }}"
+          if [ "${{ github.base_ref }}" = "dev" ]; then
+            echo "::set-output name=env_name::dev"
+          elif [ "${{ github.base_ref }}" = "preprod" ]; then
+            echo "::set-output name=env_name::preprod"
+          elif [ "${{ github.base_ref }}" = "stage" ]; then
+            echo "::set-output name=env_name::stage"
+          elif [ "${{ github.base_ref }}" = "prod" ]; then
+            echo "::set-output name=env_name::prod"
+          else
+            echo "::set-output name=env_name::None"
+          fi
+
+          echo "Running on ${{ steps.pr-labels.outputs.labels }}"
+          if [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-common') }}" == "true" ]]; then
+              echo "::set-output name=product::common"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-auth') }}" == "true" ]]; then
+              echo "::set-output name=product::auth"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-falcon') }}" == "true" ]]; then
+              echo "::set-output name=product::falcon"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-magicleap') }}" == "true" ]]; then
+              echo "::set-output name=product::magicleap"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-hyperexecute') }}" == "true" ]]; then
+              echo "::set-output name=product::hyperexecute"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-mobile') }}" == "true" ]]; then
+              echo "::set-output name=product::mobile"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-analytics') }}" == "true" ]]; then
+              echo "::set-output name=product::analytics"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-integrations') }}" == "true" ]]; then
+              echo "::set-output name=product::integrations"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-issue-tracker') }}" == "true" ]]; then
+              echo "::set-output name=product::issue"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-tas') }}" == "true" ]]; then
+              echo "::set-output name=product::tas"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-tunnel') }}" == "true" ]]; then
+              echo "::set-output name=product::tunnel"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-backend-internals') }}" == "true" ]]; then
+              echo "::set-output name=product::backend"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-security-team') }}" == "true" ]]; then
+              echo "::set-output name=product::security"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-networking') }}" == "true" ]]; then
+              echo "::set-output name=product::networking"
+          elif [[ "${{ contains(steps.pr-labels.outputs.labels, 'product-cost-optimisation') }}" == "true" ]]; then
+              echo "::set-output name=product::cost"
+          else
+              echo "::set-output name=product::None"
+          fi
+
+      - name: Select env on Workflow Dispatch
         id: branch_check
+        if: github.event_name == 'workflow_dispatch'
         run: |
           echo "Running on branch ${{ github.ref }}"
-          echo "Running on branch ${{ github.base_ref }}"
           if [ "${{ github.ref }}" = "refs/heads/dev" ]; then
             echo "::set-output name=env_name::dev"
           elif [ "${{ github.ref }}" = "refs/heads/preprod" ]; then
@@ -69,75 +118,112 @@ jobs:
           else
             echo "::set-output name=env_name::None"
           fi
+          
+          echo "Running on product ${{ steps.pr-labels.outputs.labels }}"
+          echo "::set-output name=project::${{ github.event.inputs.product }}"
 
-          echo ${{ steps.pr-labels.outputs.labels }}
-          echo "Running on branch ${{ steps.pr-labels.outputs.labels }}"
-          if [[ "${{ contains(steps.pr-labels.outputs.labels, 'project-mobile') }}" == "true" ]]; then
-            echo "::set-output name=project::mobile"
-          else
-            echo "::set-output name=project::None"
-          fi
+      - name: Use variable setup in previous step
+        run: echo "I'm using variable ${{ steps.branch_check.outputs.env_name }}"
 
-      - name: test
-        run: echo ${{ steps.branch_check.outputs.project }}
+    outputs:
+      env_name: ${{ steps.branch_check.outputs.env_name || steps.branch_check_pr.outputs.env_name }}
+      product: ${{ steps.branch_check.outputs.product || steps.branch_check_pr.outputs.product }}
 
+  terraform:
+    needs: detect
+    name: Deployment on env ${{ needs.detect.outputs.env_name }}
+    runs-on: aws-prod
+    environment:
+      name: ${{ needs.detect.outputs.env_name }}_${{ needs.detect.outputs.product }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TF_IN_AUTOMATION: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v1
-      #   with:
-      #     cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-      #     terraform_version: 0.15.0
-      # - name: Terraform Format
-      #   if: always() && github.event_name == 'pull_request'
-      #   id: fmt
-      #   run: terraform fmt -check -recursive
-      #   continue-on-error: true
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.15.0
 
-      # - name: Post Format
-      #   if: always() && github.ref != 'refs/heads/main' && (steps.fmt.outcome == 'success' || steps.fmt.outcome == 'failure') && github.event_name == 'pull_request'
-      #   uses: robburger/terraform-pr-commenter@v1
-      #   with:
-      #     commenter_type: fmt
-      #     commenter_input: ${{ format('{0}{1}', steps.fmt.outputs.stdout, steps.fmt.outputs.stderr) }}
-      #     commenter_exitcode: ${{ steps.fmt.outputs.exitcode }}
+      - name: Variable Initialization
+        run: |
+          echo "VAR_PRODUCT=${{ needs.detect.outputs.product }}" >> $GITHUB_ENV
+          echo "VAR_ENV=${{ needs.detect.outputs.env_name }}_${{ needs.detect.outputs.product }}" >> $GITHUB_ENV
 
-      # - name: Terraform Init
-      #   id: init
-      #   run: terraform init
+      - name: Deployment Details
+        run: |
+          echo "Product: ${{ env.VAR_PRODUCT }}"
+          echo "Directory: ${{ env.VAR_PRODUCT }}"
+          echo "VAR_DIR=${{ env.VAR_PRODUCT }}" >> $GITHUB_ENV
 
-      # - name: Post Init
-      #   if: always() && github.ref != 'refs/heads/main' && (steps.init.outcome == 'success' || steps.init.outcome == 'failure') && github.event_name == 'pull_request'
-      #   uses: robburger/terraform-pr-commenter@v1
-      #   with:
-      #     commenter_type: init
-      #     commenter_input: ${{ format('{0}{1}', steps.init.outputs.stdout, steps.init.outputs.stderr) }}
-      #     commenter_exitcode: ${{ steps.init.outputs.exitcode }}
+############################## Checks ##############################
+      - name: Terraform Format
+        working-directory: ${{ env.VAR_DIR }}
+        if: always() && github.event_name == 'pull_request'
+        id: fmt
+        run: terraform fmt -check -recursive
+        continue-on-error: true
 
-      # - name: Terraform Validate
-      #   if: always() && github.event_name == 'pull_request'
-      #   id: validate
-      #   run: terraform validate
+      - name: Post Format
+        if: always() && (steps.fmt.outcome == 'success' || steps.fmt.outcome == 'failure') && github.event_name == 'pull_request'
+        uses: robburger/terraform-pr-commenter@v1
+        with:
+          commenter_type: fmt
+          commenter_input: ${{ format('{0}{1}', steps.fmt.outputs.stdout, steps.fmt.outputs.stderr) }}
+          commenter_exitcode: ${{ steps.fmt.outputs.exitcode }}
 
-      # - name: Post Validate
-      #   if: always() && github.ref != 'refs/heads/main' && (steps.validate.outcome == 'success' || steps.validate.outcome == 'failure') && github.event_name == 'pull_request'
-      #   uses: robburger/terraform-pr-commenter@v1
-      #   with:
-      #     commenter_type: validate
-      #     commenter_input: ${{ format('{0}{1}', steps.validate.outputs.stdout, steps.validate.outputs.stderr) }}
-      #     commenter_exitcode: ${{ steps.validate.outputs.exitcode }}
+      - name: Terraform Init
+        working-directory: ${{ env.VAR_DIR }}
+        id: init
+        run: terraform init
 
-      # - name: Terraform Plan
-      #   id: plan
-      #   run: terraform plan -out workspace.plan -input=false
+      - name: Post Init
+        if: always() && (steps.init.outcome == 'success' || steps.init.outcome == 'failure') && github.event_name == 'pull_request'
+        uses: robburger/terraform-pr-commenter@v1
+        with:
+          commenter_type: init
+          commenter_input: ${{ format('{0}{1}', steps.init.outputs.stdout, steps.init.outputs.stderr) }}
+          commenter_exitcode: ${{ steps.init.outputs.exitcode }}
 
-      # - name: Post Plan
-      #   if: always() && github.ref != 'refs/heads/main' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') && github.event_name == 'pull_request'
-      #   uses: robburger/terraform-pr-commenter@v1
-      #   with:
-      #     commenter_type: plan
-      #     commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
-      #     commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
+      - name: Terraform Validate
+        if: always() && github.event_name == 'pull_request'
+        working-directory: ${{ env.VAR_DIR }}
+        id: validate
+        run: terraform validate
 
-      # - name: Terraform apply
-      #   if: always() && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
-      #   run: terraform apply --auto-approve -input=false workspace.plan
+      - name: Post Validate
+        if: always() && (steps.validate.outcome == 'success' || steps.validate.outcome == 'failure') && github.event_name == 'pull_request'
+        uses: robburger/terraform-pr-commenter@v1
+        with:
+          commenter_type: validate
+          commenter_input: ${{ format('{0}{1}', steps.validate.outputs.stdout, steps.validate.outputs.stderr) }}
+          commenter_exitcode: ${{ steps.validate.outputs.exitcode }}
+
+      - name: Terraform Plan
+        working-directory: ${{ env.VAR_DIR }}
+        id: plan
+        run: terraform plan -out workspace.plan -input=false
+
+      - name: Post Plan
+        if: always() && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') && github.event_name == 'pull_request'
+        uses: robburger/terraform-pr-commenter@v1
+        with:
+          commenter_type: plan
+          commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
+          commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
+
+      - name: 'Terraform Approval'
+        if: always() && github.event_name == 'workflow_dispatch'
+        uses: macnev2013/manual-approval@v1.0.18
+        with:
+           secret: ${{ secrets.GITHUB_TOKEN }}
+           approvers: monty16597
+           approval-wait: 300
+           minimum-approvals: 1
+
+      - name: Terraform apply
+        working-directory: ${{ env.VAR_DIR }}
+        if: always() && github.event_name == 'workflow_dispatch'
+        run: terraform apply workspace.plan --auto-approve -input=false
