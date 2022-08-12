@@ -5,11 +5,40 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to Perform'
+        required: true
+        type: choice
+        options:
+        - refresh
+        - plan
+        - apply
+      product:
+        description: 'Product Name to Deploy'
+        required: true
+        type: choice
+        options:
+        - common
+        - auth
+        - falcon
+        - magicleap
+        - hyperexecute
+        - mobile
+        - analytics
+        - integrations
+        - issue-tracker
+        - tas
+        - tunnel
+        - backend-internals
+        - security-team
+        - networking
+        - cost-optimisation
 
 jobs:
-  terraform-pull-request:
-    if: github.event_name == 'pull_request'
-    name: 'Terraform Pull Request checks'
+  terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
     environment:
       name: dev
@@ -26,12 +55,13 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_version: 0.15.0
       - name: Terraform Format
+        if: always() && github.event_name == 'pull_request'
         id: fmt
         run: terraform fmt -check -recursive
         continue-on-error: true
 
       - name: Post Format
-        if: always() && github.ref != 'refs/heads/master' && (steps.fmt.outcome == 'success' || steps.fmt.outcome == 'failure')
+        if: always() && github.ref != 'refs/heads/master' && (steps.fmt.outcome == 'success' || steps.fmt.outcome == 'failure') && github.event_name == 'pull_request'
         uses: robburger/terraform-pr-commenter@v1
         with:
           commenter_type: fmt
@@ -43,7 +73,7 @@ jobs:
         run: terraform init
 
       - name: Post Init
-        if: always() && github.ref != 'refs/heads/master' && (steps.init.outcome == 'success' || steps.init.outcome == 'failure')
+        if: always() && github.ref != 'refs/heads/master' && (steps.init.outcome == 'success' || steps.init.outcome == 'failure') && github.event_name == 'pull_request'
         uses: robburger/terraform-pr-commenter@v1
         with:
           commenter_type: init
@@ -51,35 +81,30 @@ jobs:
           commenter_exitcode: ${{ steps.init.outputs.exitcode }}
 
       - name: Terraform Validate
+        if: always() && github.event_name == 'pull_request'
         id: validate
         run: terraform validate
 
       - name: Post Validate
-        if: always() && github.ref != 'refs/heads/master' && (steps.validate.outcome == 'success' || steps.validate.outcome == 'failure')
+        if: always() && github.ref != 'refs/heads/master' && (steps.validate.outcome == 'success' || steps.validate.outcome == 'failure') && github.event_name == 'pull_request'
         uses: robburger/terraform-pr-commenter@v1
         with:
           commenter_type: validate
           commenter_input: ${{ format('{0}{1}', steps.validate.outputs.stdout, steps.validate.outputs.stderr) }}
           commenter_exitcode: ${{ steps.validate.outputs.exitcode }}
-      
-      - name: test
-        run: |
-          pwd
-          ls -la
-
-      - uses: ./.github/workflows/composite-action
-        with:
-          product: 'realdevice'
-          env: 'dev'
 
       - name: Terraform Plan
         id: plan
         run: terraform plan -out workspace.plan -input=false
 
       - name: Post Plan
-        if: always() && github.ref != 'refs/heads/master' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure')
+        if: always() && github.ref != 'refs/heads/master' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') && github.event_name == 'pull_request'
         uses: robburger/terraform-pr-commenter@v1
         with:
           commenter_type: plan
           commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
           commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
+
+      - name: Terraform apply
+        if: always() && github.ref == 'refs/heads/master' && github.event_name == 'workflow_dispatch'
+        run: terraform apply workspace.plan --auto-approve -input=false
