@@ -22,7 +22,7 @@ jobs:
           echo "${{ github.run_id }}"
           echo "=="
           echo "${{ github.run_attempt }}"
-          JOBS=`curl --silent -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs``
+          JOBS=`curl --silent -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs`
           echo $JOBS | jq '. | select(.realm == "Terraform pipeline") | .'
           # approved_flag=0
           # while [ $approved_flag  -eq 0 ]
