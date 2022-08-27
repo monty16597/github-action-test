@@ -25,17 +25,16 @@ jobs:
           echo "== Auto approval action started for repo $OWNER_REPO, run id $RUN_ID, to grant access of env ${{ github.ref_name }}"
           echo ""
 
-          # get_tf_job_status
-          # while [ $TF_JOB_STATUS != "waiting" ]
-          # do
-          #   echo 'Job is not started yet' && sleep 3
-          #   get_tf_job_status
-          #   echo $RUNNING_JOBS
-          #   echo $TF_JOB_STATUS
-          # done
-          # echo "TF job is in waiting state"
-          # curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/pending_deployments -d '{"environment_ids":[${{ secrets.ENV_IDS }}],"state":"approved","comment":"Auto Approved"}'
-          # echo 'TF pipeline approved' && exit 0
+          get_tf_job_status
+          while [ $TF_JOB_STATUS == "waiting" ]
+          do
+            echo 'Job is not started yet' && sleep 3
+            get_tf_job_status
+            echo "TF Job status $TF_JOB_STATUS"
+          done
+          echo "TF job is in waiting state"
+          curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/pending_deployments -d '{"environment_ids":[${{ secrets.ENV_IDS }}],"state":"approved","comment":"Auto Approved"}'
+          echo 'TF pipeline approved' && exit 0
         env:
           GH_TOKEN: "${{ secrets.ADMIN_GITHUB_TOKEN}}"
 
