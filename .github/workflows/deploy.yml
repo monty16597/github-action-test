@@ -37,7 +37,8 @@ jobs:
             echo "TF Job status $TF_JOB_STATUS"
           done
           echo "TF job is in waiting state"
-          curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/pending_deployments -d '{"environment_ids":[${{ secrets.ENV_IDS }}],"state":"approved","comment":"Auto Approved"}'
+          RESP=`curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/pending_deployments -d '{"environment_ids":[${{ secrets.ENV_IDS }}],"state":"approved","comment":"Auto Approved"}'`
+          echo $RESP | jq '. | select(.error != null)' && echo 'Error while approving' || echo "approved"
           echo 'TF pipeline approved' && exit 0
         env:
           GH_TOKEN: "${{ secrets.ADMIN_GITHUB_TOKEN}}"
