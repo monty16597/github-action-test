@@ -9,11 +9,6 @@ jobs:
   auto-approval-agent:
     runs-on: ubuntu-latest
     name: Auto approve PR
-    env:
-      ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-      ENV_ID_MAPPING: '{
-          "dev": "580684972"
-        }'
     steps:
       - name: Auto approve
         shell: sh
