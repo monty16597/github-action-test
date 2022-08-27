@@ -16,7 +16,7 @@ jobs:
           #!/bin/bash
           RUNNING_JOBS=""
           TF_JOB_STATUS=""
-          func get_tf_job_status() {
+          get_tf_job_status() {
             RUNNING_JOBS=`curl --silent -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs`
             TF_JOB_STATUS=`echo $RUNNING_JOBS | jq '.jobs[] | select(.name=="Terraform pipeline") | .status'`
             echo $RUNNING_JOBS
