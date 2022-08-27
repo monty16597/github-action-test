@@ -18,7 +18,7 @@ jobs:
           OWNER_REPO="${{ github.repository }}"
           RUN_ID="${{ github.run_id }}"
           ENV_ID=`echo ${{ secrets.ENV_ID_MAPPING }}`
-          echo $ENV_ID
+          echo $ENV_ID | jq '.'
           echo "${{ github.run_id }}"
           echo "=="
           echo "${{ github.run_number }}"
