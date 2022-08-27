@@ -19,16 +19,23 @@ jobs:
           #!/bin/bash
           RUNNING_JOBS=""
           TF_JOB_STATUS=""
+
+          # Get status of tf job
           get_tf_job_status () {
             echo "Fetching latest status of TF job"
             RUNNING_JOBS=`curl --silent -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs`
             TF_JOB_STATUS=`echo $RUNNING_JOBS | jq '.jobs[] | select(.name=="Terraform pipeline") | .status'`
           }
+
+          # Get Owner/Repo value
           OWNER_REPO="${{ github.repository }}"
+
+          # Get current run id
           RUN_ID="${{ github.run_id }}"
           echo "== Auto approval action started for repo $OWNER_REPO, run id $RUN_ID, to grant access of env ${{ github.base_ref }}"
           echo ""
 
+          # checking if tf job is in waiting state
           get_tf_job_status
           while [ $TF_JOB_STATUS == "waiting" ]
           do
@@ -36,9 +43,12 @@ jobs:
             get_tf_job_status
             echo "TF Job status $TF_JOB_STATUS"
           done
+
+          # approving job as TF job went in waiting state
           echo "TF job is in waiting state"
           RESP=`curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/pending_deployments -d '{"environment_ids":[${{ secrets.ENV_IDS }}],"state":"approved","comment":"Auto Approved"}'`
-          echo $RESP | jq '. | select(.error != null)' && echo 'Error while approving' || echo "approved"
+          echo $RESP
+          # echo $RESP | jq '. | select(.error != null)' && echo 'Error while approving' || echo "approved"
           echo 'TF pipeline approved' && exit 0
         env:
           GH_TOKEN: "${{ secrets.ADMIN_GITHUB_TOKEN}}"
