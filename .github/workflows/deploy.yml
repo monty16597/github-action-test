@@ -22,7 +22,7 @@ jobs:
           # echo $ENV_ID
 
           echo "${{ github.run_id }}"
-          echo "${{ run_number }}"
+          echo "${{ github.run_number }}"
           # curl -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/attempts/${{ github.run_number }}/jobs
           # approved_flag=0
           # while [ $approved_flag  -eq 0 ]
