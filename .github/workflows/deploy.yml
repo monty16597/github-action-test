@@ -26,7 +26,7 @@ jobs:
           }
           OWNER_REPO="${{ github.repository }}"
           RUN_ID="${{ github.run_id }}"
-          echo "== Auto approval action started for repo $OWNER_REPO, run id $RUN_ID, to grant access of env ${{ github.ref_name }}"
+          echo "== Auto approval action started for repo $OWNER_REPO, run id $RUN_ID, to grant access of env ${{ github.base_ref }}"
           echo ""
 
           get_tf_job_status
@@ -45,7 +45,7 @@ jobs:
   terraform:
     name: Terraform pipeline
     runs-on: ubuntu-latest
-    environment: "${{ github.ref_name }}"
+    environment: "${{ github.base_ref }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
