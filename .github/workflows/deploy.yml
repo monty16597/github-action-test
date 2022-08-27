@@ -19,8 +19,6 @@ jobs:
           get_tf_job_status () {
             RUNNING_JOBS=`curl --silent -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs`
             TF_JOB_STATUS=`echo $RUNNING_JOBS | jq '.jobs[] | select(.name=="Terraform pipeline") | .status'`
-            echo $RUNNING_JOBS
-            echo $TF_JOB_STATUS
           }
           OWNER_REPO="${{ github.repository }}"
           RUN_ID="${{ github.run_id }}"
@@ -28,10 +26,12 @@ jobs:
           echo ""
 
           get_tf_job_status
-          while [ $TF_JOB_STATUS != 'waiting' ]
+          while [ $TF_JOB_STATUS != "waiting" ]
           do
             echo 'Job is not started yet' && sleep 3
             get_tf_job_status
+            echo $RUNNING_JOBS
+            echo $TF_JOB_STATUS
           done
           curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/$OWNER_REPO/actions/runs/${{ github.run_id }}/pending_deployments -d '{"environment_ids":[${{ secrets.ENV_IDS }}],"state":"approved","comment":"Auto Approved"}'
           echo 'TF pipeline approved' && exit 0
