@@ -54,7 +54,7 @@ jobs:
         run: terraform init
       
       - name: test
-        run: echo "${{ github.event_name }}"
+        run: echo "${{ github.event_name }}" && echo "${{ github.event.inputs.environment_name }}"
 
       - name: Plan
         id: plan
