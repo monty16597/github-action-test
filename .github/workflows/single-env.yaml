@@ -1,6 +1,19 @@
-name: Apply on Single Environment
-run-name: ${{ github.event.inputs.tf_operation }} on ${{ github.event.inputs.environment_name }} environment
+name: Single Env Terraform
+run-name: ${{ github.event.inputs.tf_operation }} On ${{ github.event.inputs.environment_name }}
 on:
+  workflow_call:
+    inputs:
+      environment_name:
+        description: "Environment Name"
+        required: true
+        type: string
+        default: dev
+      tf_operation:
+        description: "Terraform Operation"
+        required: true
+        type: string
+        default: plan
+
   workflow_dispatch:
     inputs:
       environment_name:
@@ -22,10 +35,6 @@ on:
           - plan
           - apply
 
-permissions:
-  issues: write
-  contents: read
-
 jobs:
   main:
     runs-on: ubuntu-latest # GFL Runner tag
@@ -33,8 +42,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.1.7"
+
+      - name: Setup Terraform Summarize
+        if: github.event_name == 'pull_request'
+        uses: kishaningithub/setup-tf-summarize@v2
+      
       - name: Init
         run: terraform init
+      
+      - name: test
+        run: echo "${{ github.event_name }}" && echo "${{ github.event.inputs.environment_name }}"
 
       - name: Plan
         id: plan

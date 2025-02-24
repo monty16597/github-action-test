@@ -1,0 +1,33 @@
+name: Terraform PR check
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  Code-Quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install
+        run: echo "Install Deps"
+
+      - name: Run
+        run: echo "Perform Code Quality"
+
+      - name: Notify
+        run: echo "Comment results on PR"
+
+  Plan:
+    uses: ./.github/workflows/single-env.yaml
+    with:
+      environment_name: dev
+      tf_operation: plan
