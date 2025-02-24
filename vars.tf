@@ -1,11 +1,11 @@
 variable "test_1" {
   type = string
-  default = "value"
+  default = "value_1"
 }
 
 variable "test_2" {
   type = string
-  default = "value"
+  default = "value_2"
 }
 
 output "test_1" {
@@ -14,5 +14,5 @@ output "test_1" {
 
 variable "TEST" {
   type = string
-  default = "test"
+  default = "VALUE"
 }
