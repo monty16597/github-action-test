@@ -45,6 +45,10 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.1.7"
+
+      - name: Setup Terraform Summarize
+        if: github.event_name == 'pull_request'
+        uses: kishaningithub/setup-tf-summarize@v2
       
       - name: Init
         run: terraform init
