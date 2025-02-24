@@ -1,6 +1,7 @@
 name: Apply on Single Environment
 run-name: ${{ github.event.inputs.tf_operation }} on ${{ github.event.inputs.environment_name }} environment
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       environment_name:
