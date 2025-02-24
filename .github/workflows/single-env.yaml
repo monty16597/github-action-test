@@ -1,7 +1,19 @@
-name: Apply on Single Environment
-run-name: ${{ github.event.inputs.tf_operation }} on ${{ github.event.inputs.environment_name }} environment
+name: Single Env Terraform
+run-name: ${{ github.event.inputs.tf_operation }} On ${{ github.event.inputs.environment_name }}
 on:
   workflow_call:
+    inputs:
+      environment_name:
+        description: "Environment Name"
+        required: true
+        type: string
+        default: dev
+      tf_operation:
+        description: "Terraform Operation"
+        required: true
+        type: string
+        default: plan
+
   workflow_dispatch:
     inputs:
       environment_name:
@@ -23,10 +35,6 @@ on:
           - plan
           - apply
 
-permissions:
-  issues: write
-  contents: read
-
 jobs:
   main:
     runs-on: ubuntu-latest # GFL Runner tag
@@ -36,6 +44,9 @@ jobs:
       
       - name: Init
         run: terraform init
+      
+      - name: test
+        run: echo "${{ github.event_name }}"
 
       - name: Plan
         id: plan
